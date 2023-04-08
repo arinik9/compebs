@@ -42,6 +42,7 @@ def plot_celf_results(df, plot_filepath, title, source_url_to_pub_country_code):
   ax.tick_params(axis='both', which='major', labelsize=7)
   fig.suptitle(title, fontsize=16)
   fig.savefig(plot_filepath)
+  plt.close()
   #    = create_dict_url_to_pub_country()
 
 

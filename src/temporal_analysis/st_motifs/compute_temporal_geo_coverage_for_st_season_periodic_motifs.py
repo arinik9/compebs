@@ -95,6 +95,7 @@ def compute_temporal_geo_coverage_for_st_seasonal_periodic_motifs(in_folder, out
             df_patterns_ref = pd.read_csv(ref_result_filepath, sep=";", keep_default_na=False)
             #print(ref_result_filepath)
             
+            eval_val = 0
             if df_patterns.shape[0]>0 and df_patterns_ref.shape[0]>0:
               eval_val = compute_temporal_geo_coverage(df_patterns_ref, df_patterns)
               res_dict[result_filepath] = eval_val

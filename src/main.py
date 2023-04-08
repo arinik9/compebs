@@ -174,10 +174,10 @@ if __name__ == '__main__':
   events_filepath_dict[consts.NEWS_DB_EMPRESS_I] = events_filepath_empresi
   
   
-  out_event_distr_platform_folder = os.path.join(OUT_SPATIAL_ANALYSIS_FOLDER, "event_distribution", "<PLATFORM>")
-  for by_continent in ["World"]: # ["World", "EU", "NA", "AS"]
-    print("plot spatial distribution map for continent:", by_continent)
-    perform_spatial_distribution_map(IN_THEMATIC_TAXONOMY_FOLDER, IN_MAP_SHAPEFILE_FOLDER, events_filepath_dict, out_event_distr_platform_folder, by_continent=by_continent)
+  # out_event_distr_platform_folder = os.path.join(OUT_SPATIAL_ANALYSIS_FOLDER, "event_distribution", "<PLATFORM>")
+  # for by_continent in ["World"]: # ["World", "EU", "NA", "AS"]
+  #   print("plot spatial distribution map for continent:", by_continent)
+  #   perform_spatial_distribution_map(IN_THEMATIC_TAXONOMY_FOLDER, IN_MAP_SHAPEFILE_FOLDER, events_filepath_dict, out_event_distr_platform_folder, by_continent=by_continent)
   
   
   #########################################
@@ -189,7 +189,7 @@ if __name__ == '__main__':
   platforms = [consts.NEWS_SURVEILLANCE_PADIWEB, consts.NEWS_SURVEILLANCE_PROMED, consts.NEWS_DB_EMPRESS_I]
   spatial_scales = ["country", "region"] # "country", "region"
   temporal_scales = ["month_no"] # "week_no", "month_no"
-  process_temporal_geo_coverage_for_all_platforms(IN_EVENTS_FOLDER, IN_THEMATIC_TAXONOMY_FOLDER, out_folder, out_preprocessing_folder, platforms, spatial_scales, temporal_scales)
+  #process_temporal_geo_coverage_for_all_platforms(IN_EVENTS_FOLDER, IN_THEMATIC_TAXONOMY_FOLDER, out_folder, out_preprocessing_folder, platforms, spatial_scales, temporal_scales)
   
   # PLOT
   input_folder = os.path.join(OUT_SPATIAL_ANALYSIS_FOLDER, "spatiotemporal_representativeness")
@@ -198,7 +198,7 @@ if __name__ == '__main__':
   platforms = [consts.NEWS_SURVEILLANCE_PADIWEB, consts.NEWS_SURVEILLANCE_PROMED] # consts.NEWS_SURVEILLANCE_PADIWEB, consts.NEWS_SURVEILLANCE_PROMED
   spatial_scales = ["country", "region"] # "country", "region"
   temporal_scales = ["month_no"] # "week_no", "month_no"
-  plot_temporal_geo_coverage_results_for_all_platforms(input_folder, out_folder, IN_MAP_SHAPEFILE_FOLDER, ref_platform, platforms, spatial_scales, temporal_scales)
+  #plot_temporal_geo_coverage_results_for_all_platforms(input_folder, out_folder, IN_MAP_SHAPEFILE_FOLDER, ref_platform, platforms, spatial_scales, temporal_scales)
   
   # PLOT
   input_folder = os.path.join(OUT_SPATIAL_ANALYSIS_FOLDER, "spatiotemporal_representativeness")
@@ -207,7 +207,7 @@ if __name__ == '__main__':
   platforms = [consts.NEWS_SURVEILLANCE_PADIWEB, consts.NEWS_SURVEILLANCE_PROMED]
   spatial_scales = ["country", "region"] # "country", "region"
   temporal_scales = ["month_no"] # "week_no", "month_no"
-  plot_temporal_geo_coverage_result_comparison_for_all_platforms(input_folder, out_folder, IN_MAP_SHAPEFILE_FOLDER, platforms, ref_platform, spatial_scales, temporal_scales)
+  #plot_temporal_geo_coverage_result_comparison_for_all_platforms(input_folder, out_folder, IN_MAP_SHAPEFILE_FOLDER, platforms, ref_platform, spatial_scales, temporal_scales)
   
   # Quantitative evaluation
   # - spatiotemporal geo coverage
@@ -217,7 +217,7 @@ if __name__ == '__main__':
   platforms = [consts.NEWS_SURVEILLANCE_PADIWEB, consts.NEWS_SURVEILLANCE_PROMED]
   spatial_scales = ["country", "region"] # "country", "region"
   temporal_scales = ["month_no"] # "week_no", "month_no"  
-  compute_final_temporal_geo_coverage_result_comparison_for_all_platforms(input_folder, out_folder, platforms, ref_platform, spatial_scales, temporal_scales)
+  #compute_final_temporal_geo_coverage_result_comparison_for_all_platforms(input_folder, out_folder, platforms, ref_platform, spatial_scales, temporal_scales)
   
   
   
@@ -244,9 +244,8 @@ if __name__ == '__main__':
   promed_clustering_filepath = os.path.join(input_event_folder_promed, "event-clustering.txt")
   output_folder = os.path.join(OUT_TEMPORAL_ANALYSIS_FOLDER, "temporal_patterns")
   countries_of_interest = "CHN,VNM,KOR" # these are alpha3 country codes >> it cannot be empty or "-1"
-  year_of_interest = "-1" # "-1" means the whole time period
+  year_of_interest = "-1" # "-1" means the whole time period >> # year_of_interest = "2020"
   time_interval_col_name = "biweek_no" # "week_no", "month_no"
-  # year_of_interest = "2020"
   plot_event_evolution_for_all_platforms(MAIN_FOLDER, events_filepath_padiweb, events_filepath_promed, events_filepath_empresi, \
                                          padiweb_clustering_filepath, promed_clustering_filepath, \
                                          output_folder, countries_of_interest, year_of_interest, time_interval_col_name)
@@ -300,12 +299,10 @@ if __name__ == '__main__':
   ##   Moreover, the thematic entities are at level 2 (e.g. Avian Influenza (AI) and HPAI)
   output_folder = OUT_THEMATIC_ANALYSIS_FOLDER
   countries_of_interest = "TW,IN,CH,VN,KR,JP" # these are alpha3 country codes >> it cannot be empty or "-1"
-  year_of_interest = "2020" # "-1" means the whole time period
+  year_of_interest = "-1" # "2020" # "-1" means the whole time period
   time_interval_col_name = "week_no" # # "week_no", "month_no"
-  # year_of_interest = "-1"
-  plot_chord_diagram_for_all_platforms(MAIN_FOLDER, events_filepath_padiweb, events_filepath_promed, events_filepath_empresi, \
+  plot_chord_diagram_for_all_platforms(MAIN_FOLDER, events_simplified_filepath_padiweb, events_simplified_filepath_promed, events_simplified_filepath_empresi, \
                                          output_folder, countries_of_interest, year_of_interest, time_interval_col_name)
-  
   
   # -- motif extraction
   in_folder = IN_EVENTS_FOLDER
@@ -383,6 +380,10 @@ if __name__ == '__main__':
 
 
 
+
+
+
+
   ##################################################################################
   ##################################################################################
 
@@ -407,23 +408,23 @@ if __name__ == '__main__':
     
     eval_filename = "timeliness_"+platform_name+".csv"
     res_eval_filepath = os.path.join(OUT_TEMPORAL_ANALYSIS_FOLDER, "timeliness", eval_filename)
-    eval_filepath_dict[platform_name]["timeliness"] = res_eval_filepath
-    column_name_dict[platform_name]["timeliness"] = "timeliness"
+    eval_filepath_dict[platform_name]["temporal: timeliness"] = res_eval_filepath
+    column_name_dict[platform_name]["temporal: timeliness"] = "timeliness"
      
     eval_filename = "rank_Kishida_normalized_fmeasure_for_continuous_periodic_st_motifs_"+platform_name+".csv"
     res_eval_filepath = os.path.join(OUT_ST_PATTERN_FOLDER, platform_name, eval_filename)
-    eval_filepath_dict[platform_name]["continuous_periodicity"] = res_eval_filepath
-    column_name_dict[platform_name]["continuous_periodicity"] = "fmeasure"
+    eval_filepath_dict[platform_name]["temporal: continuous_periodicity"] = res_eval_filepath
+    column_name_dict[platform_name]["temporal: continuous_periodicity"] = "fmeasure"
     
     eval_filename = "temporal_geocoverage_for_seasonal_periodic_st_motifs_"+platform_name+".csv"
     res_eval_filepath = os.path.join(OUT_ST_PATTERN_FOLDER, platform_name, eval_filename)
-    eval_filepath_dict[platform_name]["seasonal_periodicity"] = res_eval_filepath
-    column_name_dict[platform_name]["seasonal_periodicity"] = "temporal_geocoverage"
+    eval_filepath_dict[platform_name]["temporal: seasonal_periodicity"] = res_eval_filepath
+    column_name_dict[platform_name]["temporal: seasonal_periodicity"] = "temporal_geocoverage"
     
     eval_filename = "rank_Kishida_normalized_fmeasure_for_continuous_periodic_st_multidim_motifs_"+platform_name+".csv"
     res_eval_filepath = os.path.join(OUT_THEMATIC_ANALYSIS_FOLDER, platform_name, eval_filename)
-    eval_filepath_dict[platform_name]["multidim_periodicity"] = res_eval_filepath
-    column_name_dict[platform_name]["multidim_periodicity"] = "fmeasure"
+    eval_filepath_dict[platform_name]["thematic"] = res_eval_filepath
+    column_name_dict[platform_name]["thematic"] = "fmeasure"
     
     eval_filename = "rank_Kishida_normalized_fmeasure_for_news_outlets_"+platform_name+".csv"
     res_eval_filepath = os.path.join(OUT_NEWS_OUTLET_ANALYSIS_FOLDER, platform_name, eval_filename)

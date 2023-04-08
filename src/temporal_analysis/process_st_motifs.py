@@ -153,6 +153,8 @@ def process_seasonal_periodic_st_motif_extraction(in_folder, in_taxonomy_folder,
               nb_total_lines = len(year_values)
               nb_total_periodic_lines = nb_total_lines-1
               minPS_freq = math.floor(minPS * nb_total_periodic_lines)
+              if minPS_freq == 0:
+                minPS_freq = 0.01 # workaround to get an empty file, since minPS=0 is not valid
               #minPS = (len(year_values)-1) # -1 because of periodicity (cyclic behavior) >> full periodicity
               #minPS = (len(year_values)-2) # >> partial periodicity
               #minPS = 1

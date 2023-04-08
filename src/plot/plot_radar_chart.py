@@ -60,6 +60,7 @@ def plot_radar_chart_from_df(df, output_filepath):
    
   # Initialise the spider plot
   ax = plt.subplot(111, polar=True)
+  ax.set_title('Quantitative evaluation')
    
   # If you want the first axis to be on top:
   ax.set_theta_offset(pi / 2)
