@@ -11,3 +11,6 @@ mapclassify==2.4.3
 matplotlib==3.5.
 shapely==1.8.0
 tldextract==3.3.1
+pami=2022.9.12.17
+geocoder=1.38.1
+geocoder=2.2.0
