@@ -74,6 +74,10 @@ We illustrate the usefulness of the proposed methods with an Avian Influenza dat
 * Download this project from Github: https://github.com/arinik9/compebs
 
 * We have already put sample datasets in the `in/events` folder. For the complete data, you need to retrieve the data from [Dataverse](https://entrepot.recherche.data.gouv.fr/dataset.xhtml?persistentId=doi:10.57745/Y3XROX). Download, unzip the file `normalized_events.zip` and place the folders under `normalized_events/events` into the `in/events` folder.
+
+* Update the variable `MAIN_FOLDER` in the file `src/main.py` for your main directory absolute path (e.g. `/home/USER/compebs`).
+
+* (Optional) GeoNames applies an hourly limit quota for API queries. In order to take advantage of the GeoNames' API as much as possible, we are using multiple GeoNames accounts. The description of these accounts are found in the file `src/consts.py` (with the variables `GEONAMES_API_USERNAME<NO>`, where `<NO>` is an integer value). If necessary, you can also increase the number of these accounts. In which case, you need to update the files under `src/geocode`.
   
 
 
