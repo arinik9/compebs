@@ -174,10 +174,10 @@ if __name__ == '__main__':
   events_filepath_dict[consts.NEWS_DB_EMPRESS_I] = events_filepath_empresi
   
   
-  # out_event_distr_platform_folder = os.path.join(OUT_SPATIAL_ANALYSIS_FOLDER, "event_distribution", "<PLATFORM>")
-  # for by_continent in ["World"]: # ["World", "EU", "NA", "AS"]
-  #   print("plot spatial distribution map for continent:", by_continent)
-  #   perform_spatial_distribution_map(IN_THEMATIC_TAXONOMY_FOLDER, IN_MAP_SHAPEFILE_FOLDER, events_filepath_dict, out_event_distr_platform_folder, by_continent=by_continent)
+  out_event_distr_platform_folder = os.path.join(OUT_SPATIAL_ANALYSIS_FOLDER, "event_distribution", "<PLATFORM>")
+  for by_continent in ["World"]: # ["World", "EU", "NA", "AS"]
+    print("plot spatial distribution map for continent:", by_continent)
+    perform_spatial_distribution_map(IN_THEMATIC_TAXONOMY_FOLDER, IN_MAP_SHAPEFILE_FOLDER, events_filepath_dict, out_event_distr_platform_folder, by_continent=by_continent)
   
   
   #########################################
@@ -189,7 +189,7 @@ if __name__ == '__main__':
   platforms = [consts.NEWS_SURVEILLANCE_PADIWEB, consts.NEWS_SURVEILLANCE_PROMED, consts.NEWS_DB_EMPRESS_I]
   spatial_scales = ["country", "region"] # "country", "region"
   temporal_scales = ["month_no"] # "week_no", "month_no"
-  #process_temporal_geo_coverage_for_all_platforms(IN_EVENTS_FOLDER, IN_THEMATIC_TAXONOMY_FOLDER, out_folder, out_preprocessing_folder, platforms, spatial_scales, temporal_scales)
+  process_temporal_geo_coverage_for_all_platforms(IN_EVENTS_FOLDER, IN_THEMATIC_TAXONOMY_FOLDER, out_folder, out_preprocessing_folder, platforms, spatial_scales, temporal_scales)
   
   # PLOT
   input_folder = os.path.join(OUT_SPATIAL_ANALYSIS_FOLDER, "spatiotemporal_representativeness")
@@ -198,7 +198,7 @@ if __name__ == '__main__':
   platforms = [consts.NEWS_SURVEILLANCE_PADIWEB, consts.NEWS_SURVEILLANCE_PROMED] # consts.NEWS_SURVEILLANCE_PADIWEB, consts.NEWS_SURVEILLANCE_PROMED
   spatial_scales = ["country", "region"] # "country", "region"
   temporal_scales = ["month_no"] # "week_no", "month_no"
-  #plot_temporal_geo_coverage_results_for_all_platforms(input_folder, out_folder, IN_MAP_SHAPEFILE_FOLDER, ref_platform, platforms, spatial_scales, temporal_scales)
+  plot_temporal_geo_coverage_results_for_all_platforms(input_folder, out_folder, IN_MAP_SHAPEFILE_FOLDER, ref_platform, platforms, spatial_scales, temporal_scales)
   
   # PLOT
   input_folder = os.path.join(OUT_SPATIAL_ANALYSIS_FOLDER, "spatiotemporal_representativeness")
@@ -207,7 +207,7 @@ if __name__ == '__main__':
   platforms = [consts.NEWS_SURVEILLANCE_PADIWEB, consts.NEWS_SURVEILLANCE_PROMED]
   spatial_scales = ["country", "region"] # "country", "region"
   temporal_scales = ["month_no"] # "week_no", "month_no"
-  #plot_temporal_geo_coverage_result_comparison_for_all_platforms(input_folder, out_folder, IN_MAP_SHAPEFILE_FOLDER, platforms, ref_platform, spatial_scales, temporal_scales)
+  plot_temporal_geo_coverage_result_comparison_for_all_platforms(input_folder, out_folder, IN_MAP_SHAPEFILE_FOLDER, platforms, ref_platform, spatial_scales, temporal_scales)
   
   # Quantitative evaluation
   # - spatiotemporal geo coverage
@@ -217,7 +217,7 @@ if __name__ == '__main__':
   platforms = [consts.NEWS_SURVEILLANCE_PADIWEB, consts.NEWS_SURVEILLANCE_PROMED]
   spatial_scales = ["country", "region"] # "country", "region"
   temporal_scales = ["month_no"] # "week_no", "month_no"  
-  #compute_final_temporal_geo_coverage_result_comparison_for_all_platforms(input_folder, out_folder, platforms, ref_platform, spatial_scales, temporal_scales)
+  compute_final_temporal_geo_coverage_result_comparison_for_all_platforms(input_folder, out_folder, platforms, ref_platform, spatial_scales, temporal_scales)
   
   
   
