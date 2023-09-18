@@ -103,20 +103,24 @@ class EventSimilarityStrategyManual(EventSimilarityStrategy):
   
   
   # remark: root node ROOT, which is something useless, must have level 0
-  def compute_host_similarity(self, h1, h2):
-    score = -1 # default value >> penalization factor
-    hier_related = False
-    if h1.hierarchically_includes(h2) or h1.is_hierarchically_included(h2) or h1.is_identical(h2):
-      hier_related = True
-    if hier_related:
-      # so, the bird or human level is 1
-      lvl1 = h1.get_max_hierarchy_level()
-      #lvl1 += 1
-      lvl2 = h2.get_max_hierarchy_level()
-      #lvl2 += 1
-      common_ancestor_hier_level = min(lvl1, lvl2)-1
-      score = (2*common_ancestor_hier_level)/(lvl1+lvl2)
-    return(score)
+  def compute_host_similarity(self, hl1, hl2):
+    best_score = -1 # default value >> penalization factor
+    for h1 in hl1.get_entry():
+      for h2 in hl2.get_entry():
+        hier_related = False
+        if h1.hierarchically_includes(h2) or h1.is_hierarchically_included(h2) or h1.is_identical(h2):
+          hier_related = True
+        if hier_related:
+          # so, the bird or human level is 1
+          lvl1 = h1.get_entry()["level"]
+          #lvl1 += 1
+          lvl2 = h2.get_entry()["level"]
+          #lvl2 += 1
+          common_ancestor_hier_level = min(lvl1, lvl2)-1
+          score = (2*common_ancestor_hier_level)/(lvl1+lvl2)
+          if best_score < score:
+            best_score = score
+    return(best_score)
   
   
   # remark: root node ROOT, which is something useless, must have level 0

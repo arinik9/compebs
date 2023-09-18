@@ -1,7 +1,7 @@
 import itertools
 from event.location import Location
 from event.temporality import Temporality
-from event.host import Host
+from event.hosts import Hosts
 from event.disease import Disease
 from event.symptom import Symptom
 
@@ -54,7 +54,7 @@ class Event:
       TypeError("Only objects of type 'Disease' are allowed.")
     self.disease = dis
     
-    if not isinstance(h, Host):
+    if not isinstance(h, Hosts):
       TypeError("Only objects of type 'Host' are allowed.")
     self.host = h
     
@@ -68,8 +68,8 @@ class Event:
 
   def get_event_entry(self):
     event_entry = [str(self.e_id), str(self.article_id), self.url, self.source]
-    event_entry = event_entry + self.loc.get_entry() + [self.date.__str__()] + [str(self.disease.get_entry())] \
-                 + [json.dumps(self.host.get_entry())] + self.symptom.get_entry()
+    event_entry = event_entry + self.loc.get_entry() + [self.date.__str__()] + [str(self.disease.__str__())] \
+                 + [str(self.host)] + self.symptom.get_entry()
     return(event_entry)
   
   

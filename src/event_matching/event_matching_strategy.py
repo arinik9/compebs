@@ -80,8 +80,8 @@ class EventMatchingStrategyEventSimilarity(EventMatchingStrategy):
     
     id_to_event2 = {}
     for e in events2_list:
-      #id_to_event2[e.e_id] = e
-      id_to_event2[e.article_id] = e
+      id_to_event2[e.e_id] = e
+      #id_to_event2[e.article_id] = e
       
     # source: https://stackoverflow.com/questions/66874211/match-two-sets-of-objects
     # https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.linear_sum_assignment.html
@@ -91,8 +91,8 @@ class EventMatchingStrategyEventSimilarity(EventMatchingStrategy):
     event1_id_to_index = dict(zip([s.e_id for s in events1_list], range(len(events1_list))))
     index_to_event1_id = dict(zip(range(len(events1_list)), [s.e_id for s in events1_list]))
     event2_id_to_index = dict(zip([e.e_id for e in events2_list], range(len(events2_list))))
-    #index_to_event2_id = dict(zip(range(len(events2_list)), [e.e_id for e in events2_list]))
-    index_to_event2_id = dict(zip(range(len(events2_list)), [e.article_id for e in events2_list]))
+    index_to_event2_id = dict(zip(range(len(events2_list)), [e.e_id for e in events2_list]))
+    #index_to_event2_id = dict(zip(range(len(events2_list)), [e.article_id for e in events2_list]))
   
     MAX_VALUE = 100000000
     cost_mat = np.zeros((len(events1_list), len(events2_list))) + MAX_VALUE # init with something very big value

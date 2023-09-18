@@ -14,6 +14,7 @@ from event.event import Event
 from event.location import Location
 from event.temporality import Temporality
 from event.host import Host
+from event.hosts import Hosts
 from event.disease import Disease
 from event.symptom import Symptom
 
@@ -45,20 +46,7 @@ def read_df_events(events_filepath):
   return df_events
 
 
-def read_events_from_df(df_events, in_taxonomy_folder):
-  
-  # df_events = read_df_events(events_filepath)
-  
-  #
-  disease_info_filepath = os.path.join(in_taxonomy_folder, "disease_info.csv")
-  df_disease_info = pd.read_csv(disease_info_filepath, sep=";", keep_default_na=False)
-  disease_text_to_disease = dict(zip(df_disease_info["text"], df_disease_info["disease"]))
-  disease_text_to_hier_level = dict(zip(df_disease_info["text"], df_disease_info["hier_level"]))
-  #
-  host_info_filepath = os.path.join(in_taxonomy_folder, "host_info.csv")
-  df_host_info = pd.read_csv(host_info_filepath, sep=";", keep_default_na=False)
-  host_text_to_host = dict(zip(df_host_info["text"], df_host_info["host"]))
-  host_text_to_hier_level = dict(zip(df_host_info["text"], df_host_info["hier_level"]))
+def read_events_from_df(df_events):
   
   events = []
   for index, row in df_events.iterrows():
@@ -67,29 +55,56 @@ def read_events_from_df(df_events, in_taxonomy_folder):
                    eval(row["hierarchy_data"]))
     t = Temporality(row[consts.COL_PUBLISHED_TIME], row["day_no"], row["week_no"], row["month_no"], row["year"], row["season"], row["season_no"])
     disease_tuple = eval(row[consts.COL_DISEASE])
-    dis = Disease(disease_tuple[0], disease_tuple[1])
-    dis_text = disease_tuple[0]
-    if dis_text == "":
-      dis_text = disease_tuple[1]
-    d_lvl = disease_text_to_hier_level[dis_text]
-    dis.set_max_hierarchy_level(d_lvl)
-    #print(dis_text, d_lvl)
-    h = Host(json.loads(row[consts.COL_HOST]))
-    h_vals = h.get_unnested_entry() # [('domestic bird', ['chicken', 'turkey'])] OR [('bird-unknown', ['subtype-unknown'])]
-    h_texts = [h_val[-1][0] if "unknown" not in h_val[-1][0] else h_val[-2] for h_val in h_vals ]
-    h_lvl = min([host_text_to_hier_level[h_text] for h_text in h_texts])
-    #print(h_texts, h_lvl)
-    h.set_max_hierarchy_level(h_lvl)
+    dis_parts = disease_tuple[2].split(" ") # example: "ai (unknown-pathogenicity)"
+    dis_type = dis_parts[0]
+    dis_pathogenicity = dis_parts[1].replace("(","").replace(")","").strip()
+    dis = Disease(disease_tuple[0], disease_tuple[1], dis_type)
+    dis.pathogenicity = dis_pathogenicity
+
+    h_list = []
+    for d in eval(row[consts.COL_HOST]):
+      h = Host(d)
+      h_list.append(h)
+    h_vals = Hosts(h_list)
+    #h_texts = [h_val[-1][0] if "unknown" not in h_val[-1][0] else h_val[-2] for h_val in h_vals ]
     sym = Symptom()
     # sym.load_dict_data_from_str(row[consts.COL_SYMPTOM_SUBTYPE], row[consts.COL_SYMPTOM])
     e = Event(int(row[consts.COL_ID]), row[consts.COL_ARTICLE_ID], row[consts.COL_URL], \
-                    row[consts.COL_SOURCE], loc, t, dis, h, sym, "", "")
+                    row[consts.COL_SOURCE], loc, t, dis, h_vals, sym, "", "")
     events.append(e)
     
   return events
 
 
-
+def get_df_from_events(events):
+  nb_events  = len(events)
+  if nb_events == 0:
+    print("!! there are no events !!")
+    return(-1)
+  
+  df_event_candidates = pd.DataFrame(columns=( \
+                         consts.COL_ID, consts.COL_ARTICLE_ID, consts.COL_URL, consts.COL_SOURCE, \
+                         consts.COL_GEONAMES_ID, "geoname_json",
+                         "loc_name", "loc_country_code", consts.COL_LOC_CONTINENT, \
+                         consts.COL_LAT, consts.COL_LNG, "hierarchy_data", \
+                         consts.COL_PUBLISHED_TIME, 
+                         # consts.COL_DISEASE_SUBTYPE, 
+                         consts.COL_DISEASE,  \
+                         # consts.COL_HOST_SUBTYPE, 
+                         consts.COL_HOST, consts.COL_SYMPTOM_SUBTYPE, consts.COL_SYMPTOM, \
+                         consts.COL_TITLE, consts.COL_SENTENCES
+                         ))
+  for indx in range(0,nb_events):
+    e = events[indx]
+    df_event_candidates.loc[indx] = e.get_event_entry() + [e.title, e.sentences]
+    
+  # if signal_info_exists:
+  #   signal_ids = [self.article_id_to_signal_ids[a_id] for a_id in df_event_candidates[consts.COL_ARTICLE_ID]]
+  #   df_event_candidates[consts.COL_SIGNAL_ID] = signal_ids
+  
+  return df_event_candidates
+  
+  
 
 def get_event_clusters_from_clustering_result(clustering_filepath, events):
   id_to_event = {}
@@ -158,35 +173,25 @@ def simplify_df_events_at_hier_level1(events_filepath, new_events_filepath=None)
       city_name_list.append("")
       
   disease_name_list = []
-  disease_subtype_list = []
+  disease_serotype_list = []
   for index, diseae_info_str in enumerate(df_events["disease"].to_list()):
     diseae_info = eval(diseae_info_str)
-    disease_name = diseae_info[1]
+    disease_name = diseae_info[-1]
     disease_name_list.append(disease_name)
-    disease_subtype = diseae_info[0]
-    disease_subtype_list.append(disease_subtype)
+    disease_serotype = diseae_info[0]
+    disease_serotype_list.append(disease_serotype)
     
-  host_name_list = []
+  host_list = []
   host_subtype_list = []
-  for index, host_info_str in enumerate(df_events["host"].to_list()):
-    host_info = json.loads(host_info_str)
-    host_info_keys = list(host_info.keys())
-    if len(host_info_keys) == 1 and host_info_keys[0] == "human":
-      host_name_list.append(host_info_keys[0])
-      host_subtype_list.append(",".join(host_info["human"]))
-    elif len(host_info_keys) == 1 and host_info_keys[0] == "mosquito":
-      host_name_list.append(host_info_keys[0])
-      host_subtype_list.append(",".join(host_info["mosquito"]))
-    elif len(host_info_keys) == 1 and host_info_keys[0] in ["equidae", "arctoidea", "canidae", "camelidae"]:
-      host_name_list.append("mammal")
-      host_subtype_list.append(host_info_keys[0])
-    else:
-      host_name_list.append("bird")
-      host_subtype_list.append(",".join(host_info_keys))
+  for index, host_str in enumerate(df_events["host"].to_list()):
+    h = [Host(d).get_entry()["hierarchy"][0] for d in eval(host_str)]
+    hsub = [Host(d).get_entry()["common_name"] for d in eval(host_str)]
+    host_list.append(h)
+    host_subtype_list.append(hsub)
 
   data = {"country_code":country_code_list, "country": country_name_list, "region": region_name_list, "locality": city_name_list, \
-           "disease": disease_name_list, "disease subtype": disease_subtype_list,\
-            "host": host_name_list, "host subtype": host_subtype_list}
+           "disease": disease_name_list, "disease subtype": disease_serotype_list,\
+            "host": host_list, "host subtype": host_subtype_list}
   data["id"] = df_events["id"].to_list()
   data["article_id"] = df_events["article_id"].to_list()
   data["url"] = df_events["url"].to_list()

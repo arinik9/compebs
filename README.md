@@ -1,57 +1,34 @@
-# Comparing Epidemic Intelligence Tools
+# Fusion of multiple normalized Event-Based Surveillance data
 
-This Github repository is dedicated to our work, which has been published in IEEE Access [Arınık'23].
+This program takes in input a set of normalized Event-Based Surveillance data and produces a single output file by performing an event fusion strategy. This fusion strategy is based on the normalized event entities provided by the EBS platforms. This specific branch of this repository is dedicated to the work conducted by INRAE/CIRAD and LIRMM in Montpellier for the specific end-user needs of [ESA](https://plateforme-esa.fr/fr) in the context of the [MOOD project](https://mood-h2020.eu/). Concretely, ESA aims to perform a more thorough surveillance of avian influenza cases for mammals.
 
 * Nejat Arinik [nejat.arinik@inrae.fr](mailto:nejat.arinik@inrae.fr)
-* Roberto Interdonato [roberto.interdonato@cirad.fr](mailto:roberto.interdonato@cirad.fr)
+* Julien Rabatel [jrabatel@gmail.com](mailto:jrabatel@gmail.com)
 * Mathieu Roche [mathieu.roche@cirad.fr](mailto:mathieu.roche@cirad.fr)
-* Maguelonne Teisseire [maguelonne.teisseire@inrae.fr](mailto:maguelonne.teisseire@inrae.fr)
 
 
 ## Description
 
-This set of `Python`/`R` scripts/modules is designed for comparing a set of EBS tools in terms of three aspects: 1) spatial analysis (how the events are geographically distributed), 2) temporal analysis (how the events are temporally distributed), 3) thematic entity analysis (what thematic entities are extracted from the events and how they are related to spatio-temporal analysis) and 4) news outlet analysis (what news sources play key role in epidemiological information disseminatation). For each aspect, we propose an appropriate visualisation for end-users. In this context, we define an epidemiological event as the detection of the virus at a specific date and time and in a specific location.
-
-Moreover, in this work, the spatial and temporal scales are two important parameters. We propose to visualize the data in one of the two spatial scales: country and region (ADM1) levels
-Likewise, we propose to visualize the data in one of the four temporal scales: week, bi-week, month and year.
-
-It is worth emphasizing that each spatial entity is geocoded with [GeoNames](https://www.geonames.org/). To accurately plot the spatial distribution of events, we rely on the GeoNames identifier of these spatial entities, and not their centroid coordinates. For this reason, we manually assigned a GeoNames identifier for each spatial entity at country or region (ADM1) level. These information are found in the `in/map_shapefiles/world/gaul0_asap` and `in/map_shapefiles/world/ne_10m_admin_1_states_provinces` folders.
+This set of `Python` scripts/modules is designed for fusing a set of normalized EBS data provided by several EBS platforms. In this context, we define an epidemiological event as the detection of the virus at a specific date and time and in a specific location.  In order to get the normalized events from the raw ones, you can use our dedicated [Github repository](https://github.com/arinik9/epidnews2event/tree/esa). The underlying event matching strategy is partially described in [Arınık'23]. You can also find some introductory slides in `event_similarity.pdf`.
 
 
 ## Data
 
-We illustrate the usefulness of the proposed methods with an Avian Influenza dataset. This dataset consists of the Avian Influenza events occurred between 2019 and 2021 and collected by the [PADI-Wwb](https://padi-web.cirad.fr) and [ProMED](https://promedmail.org), and [EMPRES-i](https://empres-i.apps.fao.org). Here, we use the EMPRES-i dataset as ground-truth to evaluate the events collected by PADI-web and ProMED. In total, we have $1515$, $338$ and $5229$ events from PADI-web, ProMED and EMPRES-i, respectively. All these events are standardized and normalized. The final dataset can be found on [Dataverse](https://entrepot.recherche.data.gouv.fr/dataset.xhtml?persistentId=doi:10.57745/Y3XROX) (`normalized_events.zip`).
+For reproducibility purpose, we provide some samples from the data collected by PADI-web, ProMED, WAHIS, APHIS and APHA in the `in` folder. Hence, it is possible to run the source code with these samples. Please contact us for the complete datasets.
 
 
 ## Organization
 
 * Folder `in`:
 
-  * Folder `events`: this folder contains standardized and normalized event datasets from a set of EBS tools.
-  * Folder `map_shapefiles`: this folder contains the shapefiles for the whole world at country and region (ADM1) level.
-  * Folder `news_outlets_geography`: this folder contains the details of the news outlets, particularly their spatial locations.
-  * Folder `thematic_taxonomy`: this folder contains the taxonomy trees associated to the thematic entities (host and disease information). 
-
-* Folder `in-bahdja`: this folder is supposed to contain input files for evaluating the event matching task. It is used by the file `src/main_eval_event_matching.py`.
-
-  * Folder `events`: this folder contains standardized and normalized event datasets prepared by Bahdja Boudoua. These files can be found on [Dataverse](https://entrepot.recherche.data.gouv.fr/dataset.xhtml?persistentId=doi:10.57745/Y3XROX) (`eval_event_matching.zip`).
-  * Folder `thematic_taxonomy`: this folder contains the taxonomy trees associated to the thematic entities (host and disease information). 
-
-* Folder `out`: contains the files produced by our scripts
+  * Folder `corpus-events`: this folder contains standardized and normalized event datasets from a set of EBS tools.
+  
+* Folder `out`: contains the files produced by our program.
 
 * Folder `src`: 
 
-  * Folder `event`: this folder contains event-related classes, such as Diseae, Location, Temporality and Host. It also contains the implementations for event similarity.
-  * Folder `event_matching`: the folder contains the implementations for event matching.
-  * Folder `plot`: this folder contains a single script, which proposes several functions for map plotting.
-  * Folder `spatial_analysis`: this folder contains the scripts performing the evaluation of the spatial focus of the events collected by different EBS tools
-  * Folder `temporal_analysis`: this folder contains the scripts performing the evaluation of the temporal focus of the events collected by different EBS tools
-  * Folder `thematic_analysis`: this folder contains the scripts performing the evaluation of the thematic focus of the events collected by different EBS tools
-  * Folder `news_outlet_analysis`: this folder contains the scripts performing the evaluation of online news and press agencies, that we call in short news outlets, involving in the propagation of epidemiological information. The EBS tools rely on these news outlets to collect epidemiological data and it is of importance to analyze them.
-  * Folder `hin`: this folder contains a single script, which creates an heterogeneous information network from an event dataset.
-  * Folder `stats`: this folder contains the scripts for calculating ranking results and collecting quantitative evaluation results.
-  * Folder `preprocessing`: this folder contains the scripts for preprocessing: mainly for geocoding.
-  * Folder `eval`: this folder contains the scripts for evaluation tasks.
+  * Folder `event`: this folder contains event-related classes, such as Diseae, Location, Temporality, Host and Hosts. It also contains the implementations for event similarity.
+  * Folder `event_matching`: the folder contains the implementations for event matching and event fusion.
 
 
 ## Installation
@@ -63,22 +40,14 @@ We illustrate the usefulness of the proposed methods with an Avian Influenza dat
   ```
   pip install -r requirements.txt
   ```
-* Install R (tested with R 4.2.0)
 
-* Install R dependencies using the following command:
+* Download this project from Github: https://github.com/arinik9/compebs/tree/esa
 
-  * install.packages("RColorBrewer")
-  * install.packages("ComplexHeatmap")
-  * install.packages("circlize")
+* We have already put sample datasets in the `in/corpus-events` folder. For the complete data, please contact us.
 
-* Download this project from Github: https://github.com/arinik9/compebs
+* Update the variable `MAIN_FOLDER` in the file `src/users_consts.py` for your main directory absolute path (e.g. `<YOUR_FOLDER>/compebs`).
 
-* We have already put sample datasets in the `in/events` folder. For the complete data, you need to retrieve the data from [Dataverse](https://entrepot.recherche.data.gouv.fr/dataset.xhtml?persistentId=doi:10.57745/Y3XROX). Download, unzip the file `normalized_events.zip` and place the folders under `normalized_events/events` into the `in/events` folder.
 
-* Update the variable `MAIN_FOLDER` in the file `src/main.py` for your main directory absolute path (e.g. `/home/USER/compebs`).
-
-* (Optional) GeoNames applies an hourly limit quota for API queries. In order to take advantage of the GeoNames' API as much as possible, we are using multiple GeoNames accounts. The description of these accounts are found in the file `src/consts.py` (with the variables `GEONAMES_API_USERNAME<NO>`, where `<NO>` is an integer value). If necessary, you can also increase the number of these accounts. In which case, you need to update the files under `src/geocode`.
-  
 
 
 ## How to run ?
