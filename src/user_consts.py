@@ -24,7 +24,7 @@ Created on Nov 16, 2021
 # USER-SPECIFIC VARIABLES
 # >> USER NEEDS TO CHANGE HERE ONLY <<
 # ====================================================
-MAIN_FOLDER = "/home/nejat/eclipse/workspace/compebs"
-#MAIN_FOLDER = "<YOUR_FOLDER>/epidnews2event"
+#MAIN_FOLDER = "/home/nejat/eclipse/workspace/compebs"
+MAIN_FOLDER = "<YOUR_FOLDER>/compebs"
 
 
